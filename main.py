@@ -1,36 +1,17 @@
-import openai
-import asyncio
-from dotenv import load_dotenv
-import os
+import ollama
 
-load_dotenv()
+model_name = "moondream"
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+print("Chatbot is ready! Type 'exit' to quit.")
 
-async def chat_with_openai(user_input):
-    try:
-        response = await openai.ChatCompletion.acreate(
-            model="GPT-3.5", 
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": user_input},
-            ]
-        )
-        return response.choices[0].message["content"]
-    except Exception as e:
-        return f"An error occurred: {e}"
+while True:
+    user_input = input("You: ")
+    
+    if user_input.lower() == "exit":
+        print("Goodbye!")
+        break
 
-async def start_chatbot():
-    print("👋 Welcome! I'm your chatbot. Type 'exit' to end the chat.\n")
-
-    while True:
-        user_input = input("You: ")
-        if user_input.lower() == "exit":
-            print("Goodbye! 👋")
-            break
-        response = await chat_with_openai(user_input)  
-        print(f"Bot: {response}\n")
-
-# Entry point for the chatbot
-if __name__ == "__main__":
-    asyncio.run(start_chatbot())  
+    response = ollama.generate(model_name, user_input)
+    
+    bot_response = response.response.strip()
+    print(f"Bot: {bot_response}")
