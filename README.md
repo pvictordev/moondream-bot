@@ -1,1 +1,3 @@
-# A Telegram chatbot powered by the Moondream LLM.
+# Moondream Bot
+
+A Telegram chatbot powered by the Moondream LLM.
