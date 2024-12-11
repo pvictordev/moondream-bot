@@ -73,6 +73,15 @@ async def handle_audio(update: Update, context: CallbackContext) -> None:
     except sr.RequestError as e:
         await update.message.reply_text(f"Could not request results; {e}")
 
+async def handle_text(update: Update, context: CallbackContext) -> None:
+    text = update.message.text
+    print(f"Received text: {text}")
+
+    response = ollama.generate(model_name, text)
+    bot_reply = response.response.strip()
+
+    await update.message.reply_text(bot_reply)
+
 async def start(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text("Hello! I'm your Moondream chatbot. You can send me both text and audio messages!")
 
@@ -86,6 +95,7 @@ def main():
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.VOICE, handle_voice))  # Handle voice messages
     application.add_handler(MessageHandler(filters.AUDIO, handle_audio))  # Handle audio files
+    application.add_handler(MessageHandler(filters.TEXT, handle_text))    # Handle text messages
 
     application.run_polling()
 
